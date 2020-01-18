@@ -18,5 +18,5 @@ socket.on('connect', () => {
 });
 
 socket.on('data', data => {
-  console.log(data);
-})
+  process.stdout.write(`> ${data}`);
+});
