@@ -1,7 +1,7 @@
 const { Socket } = require('net');
 
 const socket = new Socket();
-const [, , host, username] = process.argv;
+const [, , host, username, person] = process.argv;
 
 socket.setEncoding('utf8');
 socket.connect({
@@ -11,11 +11,12 @@ socket.connect({
 });
 
 socket.on('connect', () => {
+  socket.write(JSON.stringify({ username, person }));
   process.stdin.on('data', data => {
-    const request = {
-      user: username,
-      message: data.toString()
-    };
-    socket.write(JSON.stringify(request));
+    socket.write(data.toString());
   });
 });
+
+socket.on('data', data => {
+  console.log(data);
+})
