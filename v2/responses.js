@@ -84,25 +84,23 @@ const parseQueryValue = function(value) {
 const parserQuery = function(queryText) {
   const info = queryText.split('?');
   const pairs = info[0].split('&');
-  const query = {};
 
-  pairs.forEach(pair => {
+  const query = pairs.reduce((query, pair) => {
     const [key, value] = pair.split('=');
-    query[key] = parseQueryValue(value);
-  });
+    query[key] = value;
+    return query;
+  }, {});
+
   return query;
 };
 
 const getCurrentTime = function() {
   const date = new Date();
-  const hours = date
-    .getHours()
-    .toString()
-    .padStart(2, '0');
-  const minutes = date
-    .getMinutes()
-    .toString()
-    .padStart(2, '0');
+  const formatTime = function(time) {
+    return time.toString().padStart(2, '0');
+  };
+  const hours = formatTime(date.getHours());
+  const minutes = formatTime(date.getMinutes());
   return `${hours}:${minutes}`;
 };
 
