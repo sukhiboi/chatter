@@ -1,37 +1,11 @@
 const { readFileSync } = require('fs');
+const { parseRequest } = require('./requestParser');
+const { parserQuery } = require('./queryParser');
 
 const USERS = [];
 
-const parseRequest = function(request, address, port) {
-  const [req, ...headerAndBody] = request.split('\n');
-  const [method, path, protocol] = req.split(' ');
-  const { headers, body } = seprateHeadersAndBody(headerAndBody);
-
-  const headersObj = headers.reduce((headersObj, header) => {
-    const headerParts = header.split(': ');
-    const headerName = headerParts[0];
-    const headerValue = headerParts[1].replace('\r', '');
-    headersObj[headerName] = headerValue;
-    return headersObj;
-  });
-
-  return {
-    url: `${address}${path}`,
-    method,
-    path,
-    protocol,
-    headersObj,
-    body,
-    port,
-    host: address
-  };
-};
-
-const seprateHeadersAndBody = function(headerAndBody) {
-  const bodyIndex = headerAndBody.findIndex(text => text === '\r');
-  const headers = headerAndBody.slice(0, bodyIndex);
-  const body = headerAndBody.slice(bodyIndex + 1);
-  return { headers, body };
+const generateUserId = function() {
+  return Math.floor(Math.random() * 100000 + 1);
 };
 
 const generateDefaultResponse = (url, method) => {
@@ -74,28 +48,12 @@ const generateResponse = (content, type, url, method) => {
 const addNewUser = function(username) {
   USERS.push({
     name: username,
-    chats: []
+    chats: [],
+    id: generateUserId()
   });
 };
 
-const parseQueryValue = function(value) {
-  return value.split('+').join(' ');
-};
-
-const parserQuery = function(queryText) {
-  const info = queryText.split('?');
-  const pairs = info[0].split('&');
-
-  const query = pairs.reduce((query, pair) => {
-    const [key, value] = pair.split('=');
-    query[key] = value;
-    return query;
-  }, {});
-
-  return query;
-};
-
-const getCurrentTime = function() {
+const currentTime = function() {
   const date = new Date();
   const formatTime = function(time) {
     return time.toString().padStart(2, '0');
@@ -108,26 +66,25 @@ const getCurrentTime = function() {
 const handleQuery = function(request) {
   const { username, message } = parserQuery(request.body[0]);
   let html = readFileSync(`./templates${request.path}`, 'utf8');
+  const userExists = USERS.find(user => user.name === username);
 
-  if (!USERS.find(user => user.name === username)) {
-    const user = parseQueryValue(username);
-    addNewUser(user);
+  if (!userExists) {
+    addNewUser(username);
   }
   if (message) {
-    const msg = parseQueryValue(message);
     USERS.forEach(user => {
       user.chats.push({
-        msg,
+        message,
         sender: username
       });
     });
   }
 
-  const user = USERS[0];
-  const currentTime = getCurrentTime();
-  const htmlChats = user.chats.map(
+  const htmlChats = USERS[0].chats.map(
     chat =>
-      `<div class='chat-message'>${chat.msg}<br><span class="sender">~ ${chat.sender} ${currentTime}</span></div>`
+      `<div class='chat-message'>${chat.message}<br><span class="sender">~ ${
+        chat.sender
+      } ${currentTime()}</span></div>`
   );
 
   html = html.replace('user', username);
