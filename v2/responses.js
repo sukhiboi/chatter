@@ -88,12 +88,12 @@ const parserQuery = function(queryText) {
 
   pairs.forEach(pair => {
     const [key, value] = pair.split('=');
-    query[key] = value;
+    query[key] = parseQueryValue(value);
   });
   return query;
 };
 
-const getCurrentTime = function(args) {
+const getCurrentTime = function() {
   const date = new Date();
   const hours = date
     .getHours()

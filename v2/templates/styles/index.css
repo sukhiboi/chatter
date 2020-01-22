@@ -1,10 +1,23 @@
+/*
+Color Platte
+
+1C1d24 - black
+EA2340 - red
+F5EEE6 - witheish
+FFFFFF - white
+*/
+
 body {
-  background-color: #335d7e;
-  color: white;
-  font-size: 20px;
+  background-color: #1c1d24;
+  color: #ea2340;
+  font-size: 16px;
   font-weight: 700;
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.heading {
+  font-size: 60px;
 }
 
 .user-invitation {
@@ -12,11 +25,19 @@ body {
 }
 
 .user-invitation > form > input {
+  background: transparent;
   border: none;
   outline: none;
   padding: 10px 15px;
-  border-radius: 4px;
   font-size: 15px;
+  border-bottom: 2px solid rgba(234, 35, 64, 0.3);
+  margin: 0 10px;
+  color: #ea2340;
+  font-weight: 700;
+}
+
+::placeholder {
+  color: rgba(234, 35, 64, 0.3);
 }
 
 .user-invitation > form > button {
@@ -27,7 +48,11 @@ body {
   font-size: 15px;
 }
 
-.user-invitation > form > button:hover {
+.user-invitation > form > .btn {
+  border: none;
+}
+
+.user-invitation > form > .btn:hover {
   cursor: pointer;
 }
 

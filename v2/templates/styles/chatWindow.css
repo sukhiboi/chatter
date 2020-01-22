@@ -1,5 +1,14 @@
+/*
+Color Platte
+
+1C1d24 - black
+EA2340 - red
+F5EEE6 - witheish
+FFFFFF - white
+*/
+
 body {
-  background-color: #335d7e;
+  background-color: #1C1d24;
   color: white;
   font-size: 20px;
   font-weight: 700;
@@ -56,7 +65,7 @@ body {
 .chat-message {
   text-align: left;
   color: black;
-  background-color: white;
+  background-color: #F5EEE6;
   padding: 5px 15px;
   margin: 10px;
   width: fit-content;
@@ -77,4 +86,5 @@ body {
   padding: 0;
   margin: 0;
   text-align: left;
+  color: #EA2340
 }
