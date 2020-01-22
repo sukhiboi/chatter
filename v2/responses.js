@@ -10,7 +10,8 @@ const parseRequest = function(request, address, port) {
   headers.forEach(header => {
     const headerParts = header.split(': ');
     const headerName = headerParts[0];
-    const headerValue = headerParts[1];
+    const headerValue = headerParts[1].replace('\r', '');
+
     headersObj[headerName] = headerValue;
   });
   return {
@@ -133,7 +134,6 @@ const handleQuery = function(request) {
   html = html.replace('user', username);
   html = html.replace('"user"', `"${username}"`);
   html = html.replace('CHAT', htmlChats.join('\n'));
-  console.log(USERS);
 
   return generateResponse(html, 'html', request.url, request.method);
 };
