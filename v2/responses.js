@@ -8,6 +8,10 @@ const generateUserId = function() {
   return Math.floor(Math.random() * 100000 + 1);
 };
 
+const generteCookie = function(key, value) {
+  return `Set-Cookie: ${key}=${value}; SameSite=Strict;Secure; HttpOnly`;
+};
+
 const generateDefaultResponse = (url, method) => {
   const html404 = readFileSync('./templates/404.html', 'utf8');
   const response = [
@@ -110,7 +114,6 @@ const processRequest = function(request) {
 };
 
 module.exports = {
-  parseRequest,
   handleQuery,
   processRequest
 };

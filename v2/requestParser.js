@@ -1,3 +1,13 @@
+const parseCookies = function(cookies) {
+  const cookieArr = cookies.split('; ');
+  const cookieObj = cookieArr.reduce((cookiesObj, cookie) => {
+    const [key, value] = cookie.split('=');
+    cookiesObj[key] = value;
+    return cookiesObj;
+  }, {});
+  return cookieObj;
+};
+
 const parseRequest = function(request, address, port) {
   const [req, ...headerAndBody] = request.split('\n');
   const [method, path, protocol] = req.split(' ');
@@ -19,7 +29,8 @@ const parseRequest = function(request, address, port) {
     headersObj,
     body,
     port,
-    host: address
+    host: address,
+    cookies: headersObj['Cookie'] ? parseCookies(headersObj['Cookie']) : {}
   };
 };
 
