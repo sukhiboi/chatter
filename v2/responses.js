@@ -6,12 +6,19 @@ const parseRequest = function(request, address, port) {
   const [req, ...headerAndBody] = request.split('\n');
   const [method, path, protocol] = req.split(' ');
   const { headers, body } = seprateHeadersAndBody(headerAndBody);
+  const headersObj = {};
+  headers.forEach(header => {
+    const headerParts = header.split(': ');
+    const headerName = headerParts[0];
+    const headerValue = headerParts[1];
+    headersObj[headerName] = headerValue;
+  });
   return {
     url: `${address}${path}`,
     method,
     path,
     protocol,
-    headers,
+    headersObj,
     body,
     port,
     host: address
@@ -62,11 +69,10 @@ const generateResponse = (content, type, url, method) => {
   };
 };
 
-const addNewUser = function(username, port) {
+const addNewUser = function(username) {
   USERS.push({
     name: username,
-    chats: [],
-    port
+    chats: []
   });
 };
 
@@ -76,38 +82,58 @@ const parseQueryValue = function(value) {
 
 const parserQuery = function(queryText) {
   const info = queryText.split('?');
-  const pairs = info[1].split('&');
+  const pairs = info[0].split('&');
   const query = {};
 
   pairs.forEach(pair => {
     const [key, value] = pair.split('=');
     query[key] = value;
   });
-
-  query['filePath'] = info[0];
   return query;
 };
 
-const handleQuery = function(request) {
-  const { username, message, filePath } = parserQuery(request.path);
-  let html = readFileSync(`./templates${filePath}`, 'utf8');
+const getCurrentTime = function(args) {
+  const date = new Date();
+  const hours = date
+    .getHours()
+    .toString()
+    .padStart(2, '0');
+  const minutes = date
+    .getMinutes()
+    .toString()
+    .padStart(2, '0');
+  return `${hours}:${minutes}`;
+};
 
-  if (username) {
+const handleQuery = function(request) {
+  const { username, message } = parserQuery(request.body[0]);
+  let html = readFileSync(`./templates${request.path}`, 'utf8');
+
+  if (!USERS.find(user => user.name === username)) {
     const user = parseQueryValue(username);
-    addNewUser(user, request.port);
+    addNewUser(user);
   }
   if (message) {
     const msg = parseQueryValue(message);
-    USERS[0].chats.push(msg);
+    USERS.forEach(user => {
+      user.chats.push({
+        msg,
+        sender: username
+      });
+    });
   }
 
   const user = USERS[0];
+  const currentTime = getCurrentTime();
   const htmlChats = user.chats.map(
-    chat => `<div class='chat-message'>${chat}</div>`
+    chat =>
+      `<div class='chat-message'>${chat.msg}<br><span class="sender">~ ${chat.sender} ${currentTime}</span></div>`
   );
 
-  html = html.replace('user', user.name);
+  html = html.replace('user', username);
+  html = html.replace('"user"', `"${username}"`);
   html = html.replace('CHAT', htmlChats.join('\n'));
+  console.log(USERS);
 
   return generateResponse(html, 'html', request.url, request.method);
 };

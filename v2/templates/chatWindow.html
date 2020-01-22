@@ -12,17 +12,18 @@
       user online
       <div class="window">
         CHAT
-        <form action="./chatWindow.html">
-          <input
-            class="message-bar"
-            type="text"
-            name="message"
-            placeholder="Type your message"
-            autofocus
-          />
-          <input class="send-btn" type="submit" value="SEND" />
-        </form>
       </div>
+      <form method="POST" action="./chatWindow.html">
+        <input id="hidden" name="username" value="user">
+        <input
+          class="message-bar"
+          type="text"
+          name="message"
+          placeholder="Type your message"
+          autofocus
+        />
+        <input class="send-btn" type="submit" value="SEND" />
+      </form>
     </div>
   </body>
 </html>
