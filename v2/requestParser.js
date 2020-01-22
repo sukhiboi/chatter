@@ -42,5 +42,6 @@ const seprateHeadersAndBody = function(headerAndBody) {
 };
 
 module.exports = {
-  parseRequest
+  parseRequest,
+  parseCookies
 };

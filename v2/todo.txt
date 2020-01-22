@@ -3,3 +3,4 @@ write test
 figure emoji problem
 add cookies
 change query parser to reduce ----done
+fix error in chatWindiw.js it overrides all the names

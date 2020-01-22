@@ -1,5 +1,5 @@
 const { readFileSync } = require('fs');
-const { parseRequest } = require('./requestParser');
+const { parseRequest, parseCookies } = require('./requestParser');
 const { parserQuery } = require('./queryParser');
 
 const USERS = [];
@@ -9,7 +9,7 @@ const generateUserId = function() {
 };
 
 const generteCookie = function(key, value) {
-  return `Set-Cookie: ${key}=${value}; SameSite=Strict;Secure; HttpOnly`;
+  return `Set-Cookie: ${key}=${value}; SameSite=Strict`;
 };
 
 const generateDefaultResponse = (url, method) => {
@@ -31,11 +31,12 @@ const generateDefaultResponse = (url, method) => {
   };
 };
 
-const generateResponse = (content, type, url, method) => {
+const generateResponse = (content, type, url, method, cookies) => {
   const response = [
     'HTTP/1.1 200 Ok',
     `Content-Type: text/${type}`,
     `Content-Length: ${content.length}`,
+    ...cookies,
     ''
   ];
   response.push(content);
@@ -50,21 +51,30 @@ const generateResponse = (content, type, url, method) => {
 };
 
 const addNewUser = function(username) {
+  if (!username)
+    return {
+      cookies: []
+    };
+  const id = generateUserId();
   USERS.push({
     name: username,
     chats: [],
-    id: generateUserId()
+    id
   });
+  return {
+    cookies: [generteCookie('username', username), generteCookie('id', id)]
+  };
 };
 
-const currentTime = function() {
-  const date = new Date();
-  const formatTime = function(time) {
-    return time.toString().padStart(2, '0');
-  };
-  const hours = formatTime(date.getHours());
-  const minutes = formatTime(date.getMinutes());
-  return `${hours}:${minutes}`;
+const addMessages = function(message, sender) {
+  if (message) {
+    USERS.forEach(user => {
+      user.chats.push({
+        message,
+        sender
+      });
+    });
+  }
 };
 
 const handleQuery = function(request) {
@@ -72,48 +82,45 @@ const handleQuery = function(request) {
   let html = readFileSync(`./templates${request.path}`, 'utf8');
   const userExists = USERS.find(user => user.name === username);
 
-  if (!userExists) {
-    addNewUser(username);
+  if (userExists) {
+    const html = readFileSync(`./templates/userExists.html`, 'utf8');
+    return generateResponse(html, 'html', request.url, request.method, cookies);
   }
-  if (message) {
-    USERS.forEach(user => {
-      user.chats.push({
-        message,
-        sender: username
-      });
-    });
-  }
+
+  const { cookies } = addNewUser(username);
+  addMessages(message, request.cookies.username);
 
   const htmlChats = USERS[0].chats.map(
     chat =>
-      `<div class='chat-message'>${chat.message}<br><span class="sender">~ ${
-        chat.sender
-      } ${currentTime()}</span></div>`
+      `<div class='chat-message'>
+      ${chat.message}<br>
+      <span class="sender user">${chat.sender}</span>
+      <span class="sender" id="time"></span>
+      </div>`
   );
-
-  html = html.replace('user', username);
-  html = html.replace('"user"', `"${username}"`);
   html = html.replace('CHAT', htmlChats.join('\n'));
 
-  return generateResponse(html, 'html', request.url, request.method);
+  return generateResponse(html, 'html', request.url, request.method, cookies);
 };
 
 const processRequest = function(request) {
+  let cookies = [];
   if (request.path === '/') {
-    const content = readFileSync('./templates/index.html', 'utf8');
-    return generateResponse(content, 'html', request.url, request.method);
+    const html = readFileSync('./templates/index.html', 'utf8');
+    return generateResponse(html, 'html', request.url, request.method, cookies);
   }
   try {
-    const content = readFileSync(`./templates${request.path}`, 'utf8');
+    const html = readFileSync(`./templates${request.path}`, 'utf8');
     const urlParts = request.path.split('.');
     const type = urlParts[urlParts.length - 1];
-    return generateResponse(content, type, request.url, request.method);
+    return generateResponse(html, type, request.url, request.method, cookies);
   } catch (err) {
     return generateDefaultResponse(request.url, request.method);
   }
 };
 
 module.exports = {
+  parseRequest,
   handleQuery,
   processRequest
 };
