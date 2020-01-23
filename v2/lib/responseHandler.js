@@ -40,8 +40,7 @@ const addUser = function(username, html) {
 
 const sendChats = function(cookies) {
   const user = findUser(USERS, cookies.id);
-  const plainChats = user.chats.map(chat => JSON.stringify(chat));
-  return generateResponse(plainChats.join('&'), 'plain', []);
+  return generateResponse(user.htmlChat, 'plain', []);
 };
 
 const handleQuery = function(request) {

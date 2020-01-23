@@ -9,20 +9,18 @@
   </head>
   <body>
     <div class="container">
-      <span class="user"></span > online
-      <div class="window">
-        CHAT
-      </div>
-      <form method="POST" action="./chatWindow.html">
-        <input
-          class="message-bar"
-          type="text"
-          name="message"
-          placeholder="Type your message"
-          autofocus
-        />
-        <input class="send-btn" type="submit" value="SEND" />
-      </form>
+      <span class="user"></span> online
+      <div class="window"></div>
+    </div>
+    <div class="form">
+      <input
+        class="message-bar"
+        type="text"
+        name="message"
+        placeholder="Type your message"
+        autofocus
+      />
+      <button class="send-btn" onclick="sendMessage()">send</button>
     </div>
   </body>
   <script src="js/chatWindow.js"></script>

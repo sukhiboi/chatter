@@ -35,17 +35,21 @@ const sendGetRequest = function(url, cb) {
   request.send();
 };
 
-const sendPostRequest = function(url, content, cb) {
+const sendPostRequest = function(url, content) {
   const request = new XMLHttpRequest();
-  request.onload = function() {
-    cb(this.response);
-  };
   request.open('POST', url);
   request.send(content);
 };
 
+const sendMessage = function() {
+  const message = document.querySelector('.message-bar').value;
+  const content = `message=${message}`;
+  sendPostRequest('chatWindow.html', content);
+};
+
 setInterval(() => {
+  const chatWindow = document.querySelector('.window')
   sendGetRequest('chats', response => {
-    console.log(response);
+    chatWindow.innerHTML = response
   });
-}, 1000);
+}, 100);
