@@ -78,8 +78,9 @@ const processRequest = function(request) {
   }
 };
 
-const handleRequest = function(requestText) {
+const handleRequest = function(requestText, socketDetails) {
   const request = Request.parse(requestText);
+  console.log(`${request.method} ${request.path}            ${socketDetails}`);
   if (request.path == '/chats') return sendChats(request.cookies);
   const query = request.details.query;
   const isObjectEmpty = Object.entries(query).length === 0;

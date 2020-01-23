@@ -15,7 +15,8 @@ server.on('listening', () => {
 server.on('connection', socket => {
   socket.setEncoding('utf8');
   socket.on('data', data => {
-    const response = handleRequest(data);
+    const socketDetails = `${socket.remoteAddress}:${socket.remotePort} using ${socket.remoteFamily}`;
+    const response = handleRequest(data, socketDetails);
     socket.write(response);
     socket.end();
   });
