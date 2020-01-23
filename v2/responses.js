@@ -1,6 +1,4 @@
 const { readFileSync } = require('fs');
-const { parseRequest, parseCookies } = require('./requestParser');
-const { parserQuery } = require('./queryParser');
 
 const USERS = [];
 
@@ -78,17 +76,25 @@ const addMessages = function(message, sender) {
 };
 
 const handleQuery = function(request) {
-  const { username, message } = parserQuery(request.body[0]);
-  let html = readFileSync(`./templates${request.path}`, 'utf8');
+  const query = request.details.query;
+  const username = query.username,
+    message = query.message;
+  let html = readFileSync(`./templates${request.details.path}`, 'utf8');
   const userExists = USERS.find(user => user.name === username);
 
   if (userExists) {
     const html = readFileSync(`./templates/userExists.html`, 'utf8');
-    return generateResponse(html, 'html', request.url, request.method, cookies);
+    return generateResponse(
+      html,
+      'html',
+      request.details.path,
+      request.details.method,
+      cookies
+    );
   }
 
   const { cookies } = addNewUser(username);
-  addMessages(message, request.cookies.username);
+  addMessages(message, request.details.cookies.username);
 
   const htmlChats = USERS[0].chats.map(
     chat =>
@@ -100,27 +106,47 @@ const handleQuery = function(request) {
   );
   html = html.replace('CHAT', htmlChats.join('\n'));
 
-  return generateResponse(html, 'html', request.url, request.method, cookies);
+  return generateResponse(
+    html,
+    'html',
+    request.details.path,
+    request.details.method,
+    cookies
+  );
 };
 
 const processRequest = function(request) {
   let cookies = [];
-  if (request.path === '/') {
+  if (request.details.path === '/') {
     const html = readFileSync('./templates/index.html', 'utf8');
-    return generateResponse(html, 'html', request.url, request.method, cookies);
+    return generateResponse(
+      html,
+      'html',
+      request.details.path,
+      request.details.method,
+      cookies
+    );
   }
   try {
-    const html = readFileSync(`./templates${request.path}`, 'utf8');
-    const urlParts = request.path.split('.');
+    const html = readFileSync(`./templates${request.details.path}`, 'utf8');
+    const urlParts = request.details.path.split('.');
     const type = urlParts[urlParts.length - 1];
-    return generateResponse(html, type, request.url, request.method, cookies);
+    return generateResponse(
+      html,
+      type,
+      request.details.path,
+      request.details.method,
+      cookies
+    );
   } catch (err) {
-    return generateDefaultResponse(request.url, request.method);
+    return generateDefaultResponse(
+      request.details.path,
+      request.details.method
+    );
   }
 };
 
 module.exports = {
-  parseRequest,
   handleQuery,
   processRequest
 };
