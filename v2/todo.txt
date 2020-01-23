@@ -1,7 +1,7 @@
-no two peoples have sam name
+no two peoples have sam name ----done
 write test
 figure emoji problem
-add cookies
+add cookies ----done
 change query parser to reduce ----done
-fix error in chatWindiw.js it overrides all the names
-printResponseInfo function
+fix error in chatWindiw.js it overrides all the names ----done
+printResponseInfo function ----done

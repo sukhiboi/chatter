@@ -45,11 +45,11 @@ const sendChats = function(cookies) {
 
 const handleQuery = function(request) {
   const query = request.details.query;
-  const newUsername = query.username;
+  const username = query.username;
   let html = getContent(request.details.path);
 
-  if (newUsername) {
-    const response = addUser(newUsername, html);
+  if (username) {
+    const response = addUser(username, html);
     return response;
   }
 
