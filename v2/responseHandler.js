@@ -1,24 +1,14 @@
-const { readFileSync } = require('fs');
 const { Response } = require('./response');
 const { Request } = require('./request');
+const { User } = require('./user');
+const {
+  getContent,
+  generteCookie,
+  getContentType,
+  userExists
+} = require('./utilis');
 
 const USERS = [];
-
-const getContent = function(filename) {
-  const content = readFileSync(`./templates${filename}`, 'utf8');
-  return content;
-};
-
-const generateUserId = function() {
-  return Math.floor(Math.random() * 100000 + 1);
-};
-
-const generteCookie = function(key, value) {
-  return {
-    name: key,
-    value
-  };
-};
 
 const generateDefaultResponse = () => {
   const html404 = readFileSync('./templates/404.html', 'utf8');
@@ -33,81 +23,37 @@ const generateResponse = (content, type, cookies) => {
   return response.asString;
 };
 
-const getContentType = function(filename) {
-  const urlParts = filename.split('.');
-  const type = urlParts[urlParts.length - 1];
-  return type;
-};
-
-const userExists = function(username) {
-  return USERS.find(user => user.name === username);
-};
-
-const addNewUser = function(username, id) {
-  USERS.push({
-    name: username,
-    chats: [],
-    id
-  });
-};
-
-const addMessages = function(message, sender) {
-  if (message) {
-    USERS.forEach(user => {
-      user.chats.push({
-        message,
-        sender
-      });
-    });
+const addUser = function(username, html) {
+  if (userExists(USERS, username)) {
+    const html = getContent('/userExists.html');
+    return generateResponse(html, 'html', []);
   }
-};
-
-const getAllChats = function(username) {
-  const chats = username.chats.map(
-    chat =>
-      `<div class='chat-message'>
-      ${chat.message}<br>
-      <span class="sender user">${chat.sender}</span>
-      <span class="sender" id="time"></span>
-      </div>`
-  );
-  return chats;
-};
-
-const updateChats = function(html, chats) {
-  html = html.replace('CHAT', chats.join('\n'));
-  return html;
+  const userID = User.generateUserId();
+  USERS.push(new User(username, userID));
+  const cookies = [
+    generteCookie('username', username),
+    generteCookie('id', userID)
+  ];
+  return generateResponse(html, 'html', cookies);
 };
 
 const handleQuery = function(request) {
   const query = request.details.query;
   const newUsername = query.username;
-  const message = query.message;
-
   let html = getContent(request.details.path);
 
-  if (userExists()) {
-    const html = getContent('/userExists.html');
-    return generateResponse(html, 'html', []);
-  }
-
   if (newUsername) {
-    const userID = generateUserId();
-    addNewUser(newUsername, userID);
-    const cookies = [
-      generteCookie('username', newUsername),
-      generteCookie('id', userID)
-    ];
-    return generateResponse(html, 'html', cookies);
+    const response = addUser(newUsername, html);
+    return response;
   }
 
+  const message = query.message;
   const cookies = request.details.cookies;
-  const chats = getAllChats(USERS[0]);
 
-  addMessages(message, cookies.username);
-  html = updateChats(html, chats);
+  USERS.forEach(user => user.addMessage(message, cookies.username));
+  const updatedHTML = html.replace('CHAT', USERS[0].htmlChat);
 
-  return generateResponse(html, 'html', []);
+  return generateResponse(updatedHTML, 'html', []);
 };
 
 const processRequest = function(request) {
