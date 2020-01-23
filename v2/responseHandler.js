@@ -125,7 +125,12 @@ const processRequest = function(request) {
   }
 };
 
+const handleRequest = function(request) {
+  const query = request.details.query;
+  if (Object.entries(query).length === 0) return processRequest(request);
+  return handleQuery(request);
+};
+
 module.exports = {
-  handleQuery,
-  processRequest
+  handleRequest
 };
