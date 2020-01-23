@@ -1,6 +1,5 @@
 const { Server } = require('net');
 const { handleRequest } = require('./responseHandler');
-const { Request } = require('./request');
 
 const server = new Server();
 const PORT = 8000;
@@ -16,8 +15,7 @@ server.on('listening', () => {
 server.on('connection', socket => {
   socket.setEncoding('utf8');
   socket.on('data', data => {
-    const request = Request.parse(data);
-    const response = handleRequest(request);
+    const response = handleRequest(data);
     socket.write(response);
     socket.end();
   });

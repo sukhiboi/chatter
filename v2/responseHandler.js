@@ -1,5 +1,6 @@
 const { readFileSync } = require('fs');
 const { Response } = require('./response');
+const { Request } = require('./request');
 
 const USERS = [];
 
@@ -125,7 +126,8 @@ const processRequest = function(request) {
   }
 };
 
-const handleRequest = function(request) {
+const handleRequest = function(requestText) {
+  const request = Request.parse(requestText);
   const query = request.details.query;
   const isObjectEmpty = Object.entries(query).length === 0;
   if (isObjectEmpty) return processRequest(request);
