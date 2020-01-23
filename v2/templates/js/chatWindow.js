@@ -1,13 +1,3 @@
-const currentTime = function() {
-  const date = new Date();
-  const formatTime = function(time) {
-    return time.toString().padStart(2, '0');
-  };
-  const hours = formatTime(date.getHours());
-  const minutes = formatTime(date.getMinutes());
-  return `${hours}:${minutes}`;
-};
-
 const parseCookies = function(cookies) {
   const cookieArr = cookies.split('; ');
   const cookieObj = cookieArr.reduce((cookiesObj, cookie) => {
@@ -45,11 +35,18 @@ const sendMessage = function() {
   const message = document.querySelector('.message-bar').value;
   const content = `message=${message}`;
   sendPostRequest('chatWindow.html', content);
+  document.querySelector('.message-bar').value = '';
 };
 
 setInterval(() => {
-  const chatWindow = document.querySelector('.window')
+  const chatWindow = document.querySelector('.window');
   sendGetRequest('chats', response => {
-    chatWindow.innerHTML = response
+    chatWindow.innerHTML = response;
   });
 }, 100);
+
+document.body.addEventListener('keydown', () => {
+  if (event.key == 'Enter') {
+    sendMessage();
+  }
+});

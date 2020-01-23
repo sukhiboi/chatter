@@ -1,3 +1,13 @@
+const currentTime = function() {
+  const date = new Date();
+  const formatTime = function(time) {
+    return time.toString().padStart(2, '0');
+  };
+  const hours = formatTime(date.getHours());
+  const minutes = formatTime(date.getMinutes());
+  return `${hours}:${minutes}`;
+};
+
 class User {
   constructor(username, id) {
     this.username = username;
@@ -12,19 +22,24 @@ class User {
   get htmlChat() {
     let chats = '';
     this._chats.forEach(chat => {
-      chats += `<div class='chat-message'>
-      ${chat.message}<br>
-      <span class="sender user">${chat.sender}</span>
-      <span class="sender" id="time"></span>
+      chats += `<div class="${
+        this.username == chat.sender ? 'user' : 'sender'
+      } "'>
+      <div class="chat-message">
+      <span>${chat.message}</span><br>
+      <span class="info">${chat.sender}</span>
+      <span class="info" id="time">${chat.time}</span>
+      </div>
       </div>`;
     });
     return chats;
   }
 
-  addMessage(message, sender) {
+  addMessage(message, sender, time) {
     this._chats.push({
       message,
-      sender
+      sender,
+      time: currentTime()
     });
   }
 
