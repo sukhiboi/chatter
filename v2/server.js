@@ -1,5 +1,5 @@
 const { Server } = require('net');
-const { handleRequest } = require('./responseHandler');
+const { handleRequest } = require('./lib/responseHandler');
 
 const server = new Server();
 const PORT = 8000;
