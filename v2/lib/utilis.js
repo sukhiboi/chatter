@@ -1,6 +1,6 @@
 const { readFileSync } = require('fs');
 
-const getContent = function (filename) {
+const getContent = function(filename) {
   const content = readFileSync(`./templates${filename}`, 'utf8');
   return content;
 };
@@ -22,9 +22,14 @@ const userExists = function(allUsers, username) {
   return allUsers.find(user => user.username === username);
 };
 
+const findUser = function(allUsers, userId) {
+  return allUsers.find(user => user.id == userId);
+};
+
 module.exports = {
   getContent,
   generteCookie,
   getContentType,
-  userExists
+  userExists,
+  findUser
 };

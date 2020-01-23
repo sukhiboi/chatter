@@ -5,13 +5,14 @@ const {
   getContent,
   generteCookie,
   getContentType,
-  userExists
+  userExists,
+  findUser
 } = require('./utilis');
 
 const USERS = [];
 
 const generateDefaultResponse = () => {
-  const html404 = readFileSync('./templates/404.html', 'utf8');
+  const html404 = getContent('/404.html');
   const response = new Response(404, html404);
   return response.asString;
 };
@@ -35,6 +36,12 @@ const addUser = function(username, html) {
     generteCookie('id', userID)
   ];
   return generateResponse(html, 'html', cookies);
+};
+
+const sendChats = function(cookies) {
+  const user = findUser(USERS, cookies.id);
+  const plainChats = user.chats.map(chat => JSON.stringify(chat));
+  return generateResponse(plainChats.join('&'), 'plain', []);
 };
 
 const handleQuery = function(request) {
@@ -74,6 +81,7 @@ const processRequest = function(request) {
 
 const handleRequest = function(requestText) {
   const request = Request.parse(requestText);
+  if (request.path == '/chats') return sendChats(request.cookies);
   const query = request.details.query;
   const isObjectEmpty = Object.entries(query).length === 0;
   if (isObjectEmpty) return processRequest(request);

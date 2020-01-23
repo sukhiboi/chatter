@@ -25,3 +25,27 @@ document.querySelector('.user').innerText = `${cookie.username} `;
 Array.from(document.querySelectorAll('#time')).forEach(element => {
   element.innerText = currentTime();
 });
+
+const sendGetRequest = function(url, cb) {
+  const request = new XMLHttpRequest();
+  request.onload = function() {
+    cb(this.response);
+  };
+  request.open('GET', url);
+  request.send();
+};
+
+const sendPostRequest = function(url, content, cb) {
+  const request = new XMLHttpRequest();
+  request.onload = function() {
+    cb(this.response);
+  };
+  request.open('POST', url);
+  request.send(content);
+};
+
+setInterval(() => {
+  sendGetRequest('chats', response => {
+    console.log(response);
+  });
+}, 1000);
