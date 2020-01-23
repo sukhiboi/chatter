@@ -127,7 +127,8 @@ const processRequest = function(request) {
 
 const handleRequest = function(request) {
   const query = request.details.query;
-  if (Object.entries(query).length === 0) return processRequest(request);
+  const isObjectEmpty = Object.entries(query).length === 0;
+  if (isObjectEmpty) return processRequest(request);
   return handleQuery(request);
 };
 
