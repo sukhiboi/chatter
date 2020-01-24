@@ -4,8 +4,7 @@
   "description": "",
   "main": "client.js",
   "scripts": {
-    "server": "node server.js",
-    "client": "node client.js"
+    "server": "node server.js"
   },
   "keywords": [],
   "author": "",
