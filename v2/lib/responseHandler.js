@@ -68,7 +68,6 @@ const processRequest = function(request) {
   let cookies = [];
   if (request.details.path === '/') {
     const html = getContent('/index.html');
-    getContent('/index.html');
     return generateResponse(html, 'html', cookies);
   }
   try {

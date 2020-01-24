@@ -4,7 +4,7 @@ const { handleRequest } = require('./lib/responseHandler');
 const server = new Server();
 const PORT = 8000;
 
-server.listen(PORT);
+server.listen(process.argv[2] || PORT);
 
 server.on('listening', () => {
   const { address, family, port } = server.address();
