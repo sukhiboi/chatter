@@ -41,6 +41,10 @@ const removeUser = function(allUsers, cookies) {
   });
 };
 
+const printRequestLog = function(request, socketDetails) {
+  console.log(`${request.method} ${request.path}            ${socketDetails}`);
+};
+
 module.exports = {
   getContent,
   generteCookie,
@@ -48,5 +52,6 @@ module.exports = {
   userExists,
   findUser,
   userExistsWithID,
-  removeUser
+  removeUser,
+  printRequestLog
 };

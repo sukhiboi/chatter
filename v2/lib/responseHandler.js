@@ -8,7 +8,8 @@ const {
   userExists,
   findUser,
   userExistsWithID,
-  removeUser
+  removeUser,
+  printRequestLog
 } = require('./utilis');
 const mimeTypes = require('./mimeTypes');
 
@@ -85,21 +86,26 @@ const processRequest = function(request) {
   }
 };
 
+const chatHandler = function(cookies) {
+  if (userExistsWithID(USERS, cookies.id)) {
+    return sendChats(cookies);
+  }
+  return generateDefaultResponse();
+};
+
+const logoutHandler = function(cookies) {
+  removeUser(USERS, cookies);
+  const html = getContent('/index.html');
+  return generateResponse(html, 'html', []);
+};
+
 const handleRequest = function(requestText, socketDetails) {
   const request = Request.parse(requestText);
-  console.log(`${request.method} ${request.path}            ${socketDetails}`);
-  if (request.path == '/chats') {
-    if (userExistsWithID(USERS, request.cookies.id)) {
-      return sendChats(request.cookies);
-    }
-    return generateDefaultResponse();
-  }
-  if (request.path == '/close') {
-    console.log(request.cookies);
-    removeUser(USERS, request.cookies);
-    const html = getContent('/index.html');
-    return generateResponse(html, 'html', []);
-  }
+  printRequestLog(request, socketDetails);
+
+  if (request.path == '/chats') chatHandler(request.cookies);
+  if (request.path == '/close') logoutHandler(request.cookies);
+
   const query = request.details.query;
   const isObjectEmpty = Object.entries(query).length === 0;
   if (isObjectEmpty) return processRequest(request);
