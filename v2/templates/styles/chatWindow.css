@@ -137,9 +137,18 @@ body {
   height: 8vh;
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .sendername {
   display: block;
   padding-bottom: 6px;
+}
+
+.logoutBtn {
+  background: transparent;
+  border: none;
+  outline: none;
+  transform: scale(0.6);
 }

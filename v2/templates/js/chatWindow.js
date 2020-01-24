@@ -54,7 +54,9 @@ document.body.addEventListener('keydown', () => {
   }
 });
 
-window.addEventListener('beforeunload', () => {
-  event.preventDefault();
+const logout = function() {
   sendPostRequest('close', 'user-state=disconnected');
-});
+  document.location = '/';
+};
+
+window.addEventListener('beforeunload', logout);

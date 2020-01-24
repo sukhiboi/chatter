@@ -10,6 +10,7 @@ const {
   userExistsWithID,
   removeUser
 } = require('./utilis');
+const mimeTypes = require('./mimeTypes');
 
 const USERS = [];
 
@@ -22,7 +23,7 @@ const generateDefaultResponse = () => {
 const generateResponse = (content, type, cookies) => {
   const response = new Response(200, content);
   cookies.forEach(cookie => response.addCookie(cookie));
-  response.addHeader('Content-Type', `text/${type}`);
+  response.addHeader('Content-Type', mimeTypes[type]);
   return response.asString;
 };
 
@@ -65,10 +66,15 @@ const handleQuery = function(request) {
 };
 
 const processRequest = function(request) {
+  const date = new Date();
+
   let cookies = [];
   if (request.details.path === '/') {
     const html = getContent('/index.html');
-    return generateResponse(html, 'html', cookies);
+    return generateResponse(html, 'html', [
+      generteCookie('username', `username=null; Expires=${date.toUTCString()}`),
+      generteCookie('username', `id=null; Expires=${date.toUTCString()}`)
+    ]);
   }
   try {
     const html = getContent(request.details.path);
@@ -86,11 +92,13 @@ const handleRequest = function(requestText, socketDetails) {
     if (userExistsWithID(USERS, request.cookies.id)) {
       return sendChats(request.cookies);
     }
-    return generateResponse('USER NOT FOUND', 'plain', []);
+    return generateDefaultResponse();
   }
   if (request.path == '/close') {
+    console.log(request.cookies);
     removeUser(USERS, request.cookies);
-    return generateDefaultResponse();
+    const html = getContent('/index.html');
+    return generateResponse(html, 'html', []);
   }
   const query = request.details.query;
   const isObjectEmpty = Object.entries(query).length === 0;
