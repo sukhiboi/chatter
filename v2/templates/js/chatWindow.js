@@ -42,9 +42,10 @@ setInterval(() => {
   const chatWindow = document.querySelector('.window');
   sendGetRequest('chats', response => {
     if (response == 'USER NOT FOUND') {
-      document.body.innerHTML = response;
+      document.location = '/userNotFound.html';
+    } else {
+      chatWindow.innerHTML = response;
     }
-    chatWindow.innerHTML = response;
   });
 }, 1000);
 

@@ -90,7 +90,9 @@ const chatHandler = function(cookies) {
   if (userExistsWithID(USERS, cookies.id)) {
     return sendChats(cookies);
   }
-  return generateDefaultResponse();
+  const html = "USER NOT FOUND";
+  const type = mimeTypes['txt'];
+  return generateResponse(html, type, []);
 };
 
 const logoutHandler = function(cookies) {
@@ -99,7 +101,7 @@ const logoutHandler = function(cookies) {
   return generateResponse(html, 'html', []);
 };
 
-const handleRequest = function(requestText, socketDetails) {
+const handleRequest = function (requestText, socketDetails) {
   const request = Request.parse(requestText);
   printRequestLog(request, socketDetails);
   if (request.path == '/chats') return chatHandler(request.cookies);
