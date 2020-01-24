@@ -8,12 +8,13 @@ FFFFFF - white
 */
 
 body {
-  background-color: #1c1d24;
-  color: #ea2340;
+  background-color: #fefefe;
+  color: #00a1e1;
   font-size: 16px;
   font-weight: 700;
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
 }
 
 .heading {
@@ -21,7 +22,10 @@ body {
 }
 
 .user-invitation {
-  margin: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .user-invitation > form > input {
@@ -30,14 +34,14 @@ body {
   outline: none;
   padding: 10px 15px;
   font-size: 15px;
-  border-bottom: 2px solid rgba(234, 35, 64, 0.3);
+  border-bottom: 2px solid rgba(0, 161, 225, 0.3);
   margin: 0 10px;
-  color: #ea2340;
+  color: #00a1e1;
   font-weight: 700;
 }
 
 ::placeholder {
-  color: rgba(234, 35, 64, 0.3);
+  color: rgba(0, 161, 225, 0.3);
 }
 
 .user-invitation > form > button {

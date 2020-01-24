@@ -8,8 +8,8 @@ FFFFFF - white
 */
 
 body {
-  background-color: #1c1d24;
-  color: white;
+  background-color: #fefefe;
+  color: black;
   font-size: 20px;
   font-weight: 700;
   text-align: center;
@@ -17,21 +17,24 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  margin: 0;
 }
 
 .container {
-  margin: 20px;
+  margin: 0;
 }
 
 .window {
-  height: 90vh;
+  height: 80vh;
   position: relative;
-  background-color: rgba(128, 128, 128, 0.3);
+  background-color: #fefefe;
   padding: 10px 0;
   border-radius: 10px;
   margin-top: 10px;
   overflow: hidden;
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .form {
@@ -41,7 +44,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 10px;
-  width: 90%;
+  width: 100%;
 }
 
 .form > input {
@@ -49,8 +52,8 @@ body {
   border: none;
   outline: none;
   padding: 10px 15px;
-  border-radius: 4px;
   font-size: 15px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.3);
 }
 
 .message-bar {
@@ -70,12 +73,12 @@ body {
 .chat-message {
   color: black;
   background-color: #f5eee6;
-  padding: 5px 15px;
+  padding: 10px 30px;
   margin: 10px;
   width: fit-content;
-  border-radius: 4px;
-  font-weight: 100;
-  font-size: 16px;
+  border-radius: 30px;
+  font-weight: 900;
+  font-size: 14px;
   max-width: 50%;
 }
 
@@ -90,17 +93,53 @@ body {
   padding: 0;
   margin: 0;
   text-align: left;
-  color: #ea2340;
+  color: black;
 }
 
 .sender {
-  text-align: right;
-}
-
-.user {
   text-align: left;
 }
 
-.sender > .chat-message {
+.username {
+  color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.user {
+  text-align: right;
+  color: black;
+}
+
+.user > .chat-message {
+  border-bottom-right-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.1);
   margin: 0 10px 10px auto;
+}
+
+.user > .chat-message > .info {
+  display: none;
+}
+
+.user > .chat-message > #time {
+  display: inline;
+}
+
+.sender > .chat-message {
+  background-color: #00a1e1;
+  border-bottom-left-radius: 5px;
+  color: white;
+}
+
+.header {
+  height: 8vh;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sendername {
+  display: block;
+  padding-bottom: 6px;
 }

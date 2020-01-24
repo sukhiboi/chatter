@@ -22,12 +22,10 @@ class User {
   get htmlChat() {
     let chats = '';
     this._chats.forEach(chat => {
-      chats += `<div class="${
-        this.username == chat.sender ? 'user' : 'sender'
-      } "'>
+      chats += `<div class="${this.id == chat.sender.id ? 'user' : 'sender'} "'>
       <div class="chat-message">
+      <span class="info sendername">${chat.sender.username}</span>
       <span>${chat.message}</span><br>
-      <span class="info">${chat.sender}</span>
       <span class="info" id="time">${chat.time}</span>
       </div>
       </div>`;
@@ -35,7 +33,7 @@ class User {
     return chats;
   }
 
-  addMessage(message, sender, time) {
+  addMessage(message, sender) {
     this._chats.push({
       message,
       sender,

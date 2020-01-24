@@ -26,10 +26,15 @@ const findUser = function(allUsers, userId) {
   return allUsers.find(user => user.id == userId);
 };
 
+const userExistsWithID = function(allUsers, id) {
+  return allUsers.find(user => user.id == id);
+};
+
 module.exports = {
   getContent,
   generteCookie,
   getContentType,
   userExists,
-  findUser
+  findUser,
+  userExistsWithID
 };

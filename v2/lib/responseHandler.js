@@ -6,7 +6,8 @@ const {
   generteCookie,
   getContentType,
   userExists,
-  findUser
+  findUser,
+  userExistsWithID
 } = require('./utilis');
 
 const USERS = [];
@@ -56,7 +57,7 @@ const handleQuery = function(request) {
   const message = query.message;
   const cookies = request.details.cookies;
 
-  USERS.forEach(user => user.addMessage(message, cookies.username));
+  USERS.forEach(user => user.addMessage(message, cookies));
   const updatedHTML = html.replace('CHAT', USERS[0].htmlChat);
 
   return generateResponse(updatedHTML, 'html', []);
@@ -81,7 +82,12 @@ const processRequest = function(request) {
 const handleRequest = function(requestText, socketDetails) {
   const request = Request.parse(requestText);
   console.log(`${request.method} ${request.path}            ${socketDetails}`);
-  if (request.path == '/chats') return sendChats(request.cookies);
+  if (request.path == '/chats') {
+    if (userExistsWithID(USERS, request.cookies.id)) {
+      return sendChats(request.cookies);
+    }
+    return generateResponse('USER NOT FOUND', 'plain', []);
+  }
   const query = request.details.query;
   const isObjectEmpty = Object.entries(query).length === 0;
   if (isObjectEmpty) return processRequest(request);

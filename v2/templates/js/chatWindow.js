@@ -10,7 +10,7 @@ const parseCookies = function(cookies) {
 
 const cookie = parseCookies(document.cookie);
 
-document.querySelector('.user').innerText = `${cookie.username} `;
+document.querySelector('.username').innerText = `${cookie.username} `;
 
 Array.from(document.querySelectorAll('#time')).forEach(element => {
   element.innerText = currentTime();
@@ -41,9 +41,12 @@ const sendMessage = function() {
 setInterval(() => {
   const chatWindow = document.querySelector('.window');
   sendGetRequest('chats', response => {
+    if (response == 'USER NOT FOUND') {
+      document.body.innerHTML = response;
+    }
     chatWindow.innerHTML = response;
   });
-}, 100);
+}, 1000);
 
 document.body.addEventListener('keydown', () => {
   if (event.key == 'Enter') {
