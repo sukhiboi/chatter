@@ -7,7 +7,8 @@ const {
   getContentType,
   userExists,
   findUser,
-  userExistsWithID
+  userExistsWithID,
+  removeUser
 } = require('./utilis');
 
 const USERS = [];
@@ -87,6 +88,10 @@ const handleRequest = function(requestText, socketDetails) {
       return sendChats(request.cookies);
     }
     return generateResponse('USER NOT FOUND', 'plain', []);
+  }
+  if (request.path == '/close') {
+    removeUser(USERS, request.cookies);
+    return generateDefaultResponse();
   }
   const query = request.details.query;
   const isObjectEmpty = Object.entries(query).length === 0;

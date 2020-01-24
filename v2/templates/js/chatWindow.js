@@ -53,3 +53,8 @@ document.body.addEventListener('keydown', () => {
     sendMessage();
   }
 });
+
+window.addEventListener('beforeunload', () => {
+  event.preventDefault();
+  sendPostRequest('close', 'user-state=disconnected');
+});

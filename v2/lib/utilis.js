@@ -30,11 +30,23 @@ const userExistsWithID = function(allUsers, id) {
   return allUsers.find(user => user.id == id);
 };
 
+const removeUser = function(allUsers, cookies) {
+  allUsers.forEach(user => {
+    if (user.id == cookies.id) {
+      const index = allUsers.indexOf(user);
+      if (index > -1) {
+        allUsers.splice(index, 1);
+      }
+    }
+  });
+};
+
 module.exports = {
   getContent,
   generteCookie,
   getContentType,
   userExists,
   findUser,
-  userExistsWithID
+  userExistsWithID,
+  removeUser
 };
