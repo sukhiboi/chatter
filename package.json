@@ -4,7 +4,9 @@
   "description": "",
   "main": "client.js",
   "scripts": {
-    "server": "node server.js"
+    "server": "node server.js",
+    "test": "nyc mocha",
+    "test-dev": "mocha -w --reporter=min"
   },
   "keywords": [],
   "author": "",
