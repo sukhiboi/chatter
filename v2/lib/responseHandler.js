@@ -68,13 +68,13 @@ const handleQuery = function(request) {
 
 const processRequest = function(request) {
   const date = new Date();
-
+  date.setTime(date.getTime() + 2000);
   let cookies = [];
   if (request.details.path === '/') {
     const html = getContent('/index.html');
     return generateResponse(html, 'html', [
-      generteCookie('username', `username=null; Expires=${date.toUTCString()}`),
-      generteCookie('username', `id=null; Expires=${date.toUTCString()}`)
+      generteCookie('username', `null; Expires=${date.toUTCString()}`),
+      generteCookie('id', `null; Expires=${date.toUTCString()}`)
     ]);
   }
   try {
@@ -102,9 +102,8 @@ const logoutHandler = function(cookies) {
 const handleRequest = function(requestText, socketDetails) {
   const request = Request.parse(requestText);
   printRequestLog(request, socketDetails);
-
-  if (request.path == '/chats') chatHandler(request.cookies);
-  if (request.path == '/close') logoutHandler(request.cookies);
+  if (request.path == '/chats') return chatHandler(request.cookies);
+  if (request.path == '/close') return logoutHandler(request.cookies);
 
   const query = request.details.query;
   const isObjectEmpty = Object.entries(query).length === 0;
