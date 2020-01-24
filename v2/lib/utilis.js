@@ -26,10 +26,6 @@ const findUser = function(allUsers, userId) {
   return allUsers.find(user => user.id == userId);
 };
 
-const userExistsWithID = function(allUsers, id) {
-  return allUsers.find(user => user.id == id);
-};
-
 const removeUser = function(allUsers, cookies) {
   allUsers.forEach(user => {
     if (user.id == cookies.id) {
@@ -51,7 +47,6 @@ module.exports = {
   getContentType,
   userExists,
   findUser,
-  userExistsWithID,
   removeUser,
   printRequestLog
 };

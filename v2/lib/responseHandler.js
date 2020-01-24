@@ -7,7 +7,6 @@ const {
   getContentType,
   userExists,
   findUser,
-  userExistsWithID,
   removeUser,
   printRequestLog
 } = require('./utilis');
@@ -69,7 +68,6 @@ const handleQuery = function(request) {
 const processRequest = function(request) {
   const date = new Date();
   date.setTime(date.getTime() + 2000);
-  let cookies = [];
   if (request.details.path === '/') {
     const html = getContent('/index.html');
     return generateResponse(html, 'html', [
@@ -80,14 +78,14 @@ const processRequest = function(request) {
   try {
     const html = getContent(request.details.path);
     const type = getContentType(request.details.path);
-    return generateResponse(html, type, cookies);
+    return generateResponse(html, type, []);
   } catch (err) {
     return generateDefaultResponse();
   }
 };
 
 const chatHandler = function(cookies) {
-  if (userExistsWithID(USERS, cookies.id)) {
+  if (findUser(USERS, cookies.id)) {
     return sendChats(cookies);
   }
   const html = "USER NOT FOUND";
