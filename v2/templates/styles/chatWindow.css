@@ -160,3 +160,7 @@ body {
   outline: none;
   transform: scale(0.5);
 }
+
+.logoutBtn :hover {
+  cursor: pointer;
+}
