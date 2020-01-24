@@ -5,6 +5,6 @@ add cookies ----done
 change query parser to reduce ----done
 fix error in chatWindiw.js it overrides all the names ----done
 printResponseInfo function ----done
-Solve multiple request problem
-When user close page user should be disconnected from server
-Add cookie login 
+Solve multiple request problem ----done
+When user close page user should be disconnected from server ----done
+Add cookie login ----done
