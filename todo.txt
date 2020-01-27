@@ -8,3 +8,7 @@ printResponseInfo function ----done
 Solve multiple request problem ----done
 When user close page user should be disconnected from server ----done
 Add cookie login ----done
+auto scrolling
+rigister btn (rephrasek, )
+chatter -> CHatter
+insted of full page show small error

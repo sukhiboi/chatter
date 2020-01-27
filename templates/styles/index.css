@@ -54,10 +54,20 @@ body {
 
 .user-invitation > form > .btn {
   border: none;
+  background-color: white;
+  color: #00a1e1;
+  border: 1px solid #00a1e1;
+  margin-top: 10px;
+  border-radius: 10px;
+  display: inline-block;
+  transition: background-color .2s , color .2s ease-in-out;
 }
 
 .user-invitation > form > .btn:hover {
   cursor: pointer;
+  background-color: #00a1e1;
+  color: white;
+  transition: background-color .2s , color .2s ease-in-out;
 }
 
 .user-invitation > p {
