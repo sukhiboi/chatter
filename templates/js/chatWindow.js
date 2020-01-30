@@ -47,7 +47,7 @@ setInterval(() => {
       chatWindow.innerHTML = response;
     }
   });
-}, 1000);
+}, 100);
 
 document.body.addEventListener('keydown', () => {
   if (event.key == 'Enter') {
