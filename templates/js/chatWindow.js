@@ -42,6 +42,7 @@ setInterval(() => {
   const chatWindow = document.querySelector('.window');
   sendGetRequest('chats', response => {
     console.log(response);
+    console.log(response.split('&'));
     if (response == 'USER NOT FOUND') {
       document.location = '/userNotFound.html';
     } else {
