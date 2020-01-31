@@ -49,7 +49,7 @@ setInterval(() => {
       chatWindow.innerHTML = response;
     }
   });
-}, 100);
+}, 1000);
 
 document.body.addEventListener('keydown', () => {
   if (event.key == 'Enter') {
