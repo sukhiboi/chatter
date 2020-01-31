@@ -15,3 +15,4 @@ insted of full page show small error
 http
 one two one
 test
+manage session
