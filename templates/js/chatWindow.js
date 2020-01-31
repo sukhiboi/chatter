@@ -34,13 +34,14 @@ const sendPostRequest = function(url, content) {
 const sendMessage = function() {
   const message = document.querySelector('.message-bar').value;
   const content = `message=${message}`;
-  sendPostRequest('chatWindow.html', content);
+  sendPostRequest('/message', content);
   document.querySelector('.message-bar').value = '';
 };
 
 setInterval(() => {
   const chatWindow = document.querySelector('.window');
   sendGetRequest('chats', response => {
+    console.log(response);
     if (response == 'USER NOT FOUND') {
       document.location = '/userNotFound.html';
     } else {

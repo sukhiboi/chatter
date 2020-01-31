@@ -1,14 +1,17 @@
 const { Server } = require('http');
-const { serveStaticPage, notFound, registerUser } = require('./lib/handlers');
+const handlers = require('./lib/handlers');
 const { bodyParser } = require('./lib/middlewares');
 const { App } = require('./lib/app');
 const app = new App();
 
 app.use(bodyParser);
-app.get('/', serveStaticPage);
-app.post('/', registerUser);
-app.get('', notFound);
+app.get('/', handlers.serveStaticPage);
+app.get('/chats', handlers.sendChats);
 
+app.post('/message', handlers.addMessage);
+app.post('/', handlers.registerUser);
+
+app.get('', handlers.notFound);
 
 const server = new Server(app.serve.bind(app));
 const PORT = 8000;
